@@ -9,13 +9,31 @@ class GitHub extends Component {
     
         this.state = {
             data: [],
-            isLoading : true
+            searchTerm: '',
+            isLoading : false
         }
+
+       this.handleChange = this.handleChange.bind(this);
+       this.handleSubmit = this.handleSubmit.bind(this);
+
     }
 
-    componentDidMount(){
-        this.getGitHubData('greg');
+
+    handleChange(e) {
+        this.setState({ searchTerm: e.target.value })
     }
+
+    handleSubmit(e){
+        e.preventDefault();
+        this.setState({
+            isLoading: true
+        })
+
+        this.getGitHubData(this.state.searchTerm);
+
+    }
+
+
 
     getGitHubData(_searchTerm){
         axios.get(`https://api.github.com/search/users?q=${_searchTerm}`)
@@ -24,6 +42,9 @@ class GitHub extends Component {
                     isLoading: false,
                     data: res.data.items
                 })
+
+                console.log(this.state.data)
+
             });
     }
 
@@ -44,10 +65,20 @@ class GitHub extends Component {
     )
 
         return(
-            <div>
-                <h3>Github Users Results</h3>
+            <div className="container">
+                <div className="row">
+                <Form inline onSubmit={this.handleSubmit}>
+                    <FormGroup controlId="searchForm">
+                        <FormControl type="text" value={this.state.searchTerm} placeholder="Enter Search Term" onChange={this.handleChange} />                    
+                    </FormGroup>
+                    {''}
+                    <Button type="submit" onSubmit={this.handleSubmit}>Look Up</Button>
+                </Form>
+               
                 {this.state.isLoading && <ReactLoading type="spinningBubbles" color="#444" />}
+                 {listUsers.length === 0 ? <p>Please enter a username in the searchbox above.</p> :  <h3>{listUsers.length} Github Users Found</h3> }
                 {listUsers}
+                </div>
             </div>
         )
     }
