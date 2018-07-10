@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
-import GitHub from './GitHub';
+
+import Header from './Header';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <GitHub/>
+        <Header/>
       </div>
     );
   }
